@@ -9,6 +9,9 @@ export const metadata: Metadata = {
   description: "Visualize your running progress over familiar routes using Strava data",
 };
 
+// Force dynamic rendering to prevent SSG issues with localStorage
+export const dynamic = 'force-dynamic';
+
 export default function RootLayout({
   children,
 }: Readonly<{

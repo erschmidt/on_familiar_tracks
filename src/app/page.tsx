@@ -5,26 +5,25 @@ import { useSearchParams } from 'next/navigation';
 import Dashboard from '@/components/Dashboard';
 import StravaConnect from '@/components/StravaConnect';
 
-// Force dynamic rendering
-export const dynamic = 'force-dynamic';
-
 function HomeContent() {
   const searchParams = useSearchParams();
   const [accessToken, setAccessToken] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
-    // Check if we have a token in localStorage
-    const storedToken = localStorage.getItem('strava_access_token');
-    if (storedToken) {
-      setAccessToken(storedToken);
-    }
-    setIsLoading(false);
+    // Check if we have a token in localStorage (client-side only)
+    if (typeof window !== 'undefined') {
+      const storedToken = localStorage.getItem('strava_access_token');
+      if (storedToken) {
+        setAccessToken(storedToken);
+      }
+      setIsLoading(false);
 
-    // Check if we just got redirected back from Strava
-    const code = searchParams.get('code');
-    if (code && !storedToken) {
-      exchangeToken(code);
+      // Check if we just got redirected back from Strava
+      const code = searchParams.get('code');
+      if (code && !storedToken) {
+        exchangeToken(code);
+      }
     }
   }, [searchParams]);
 
