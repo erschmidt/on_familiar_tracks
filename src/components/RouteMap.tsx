@@ -50,7 +50,8 @@ export default function RouteMap({ activities }: RouteMapProps) {
           opacity: 0.7,
         }).addTo(mapRef.current!);
 
-        bounds.extend(latLngs);
+        // Extend bounds with each point
+        latLngs.forEach(latLng => bounds.extend(latLng));
 
         // Add tooltip with activity info
         const date = new Date(activity.start_date).toLocaleDateString();
