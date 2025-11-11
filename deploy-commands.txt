@@ -1,0 +1,19 @@
+# Quick Deployment Commands
+
+# Step 1: Initialize Git (if not already done)
+git init
+
+# Step 2: Add all files
+git add .
+
+# Step 3: Create initial commit
+git commit -m "Initial commit - Running tracker with Strava integration"
+
+# Step 4: Add your GitHub repository (replace YOUR_USERNAME)
+# git remote add origin https://github.com/YOUR_USERNAME/on-familiar-tracks.git
+
+# Step 5: Push to GitHub
+# git branch -M main
+# git push -u origin main
+
+# After this, continue with Vercel deployment as described in DEPLOYMENT.md
