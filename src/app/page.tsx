@@ -5,6 +5,9 @@ import { useSearchParams } from 'next/navigation';
 import Dashboard from '@/components/Dashboard';
 import StravaConnect from '@/components/StravaConnect';
 
+// Force dynamic rendering
+export const dynamic = 'force-dynamic';
+
 function HomeContent() {
   const searchParams = useSearchParams();
   const [accessToken, setAccessToken] = useState<string | null>(null);
