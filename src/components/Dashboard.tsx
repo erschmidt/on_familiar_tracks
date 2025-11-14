@@ -66,6 +66,7 @@ export default function Dashboard({ accessToken, onLogout }: DashboardProps) {
   });
   
   const [showSettings, setShowSettings] = useState(false);
+  const [showRouteMenu, setShowRouteMenu] = useState(false);
   const [isCached, setIsCached] = useState(false);
   const [lastSync, setLastSync] = useState<string | null>(null);
   const [isSyncing, setIsSyncing] = useState(false);
@@ -249,15 +250,34 @@ export default function Dashboard({ accessToken, onLogout }: DashboardProps) {
         <div className="max-w-7xl mx-auto px-4 py-4">
           {/* Top row: Title and main actions */}
           <div className="flex items-center justify-between mb-3">
-            <div className="flex-1 min-w-0">
-              <h1 className="text-xl sm:text-2xl font-bold text-gray-900 dark:text-white truncate">
-                On Familiar Tracks
-              </h1>
-              {lastSync && (
-                <p className="text-xs text-gray-500 dark:text-gray-400 mt-0.5">
-                  {isCached ? '💾 Cached' : '✓ Synced'} • {new Date(lastSync).toLocaleDateString()}
-                </p>
+            <div className="flex items-center gap-3 flex-1 min-w-0">
+              {/* Burger Menu Button - Only show when routes exist */}
+              {groupedRoutes.length > 0 && (
+                <button
+                  onClick={() => setShowRouteMenu(!showRouteMenu)}
+                  className="lg:hidden flex items-center justify-center w-10 h-10 bg-blue-500 hover:bg-blue-600 text-white rounded-lg transition-colors shadow-sm"
+                  title="Toggle routes menu"
+                >
+                  <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    {showRouteMenu ? (
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                    ) : (
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
+                    )}
+                  </svg>
+                </button>
               )}
+              
+              <div className="flex-1 min-w-0">
+                <h1 className="text-xl sm:text-2xl font-bold text-gray-900 dark:text-white truncate">
+                  On Familiar Tracks
+                </h1>
+                {lastSync && (
+                  <p className="text-xs text-gray-500 dark:text-gray-400 mt-0.5">
+                    {isCached ? '💾 Cached' : '✓ Synced'} • {new Date(lastSync).toLocaleDateString()}
+                  </p>
+                )}
+              </div>
             </div>
             
             {/* Action buttons - stacked on small screens */}
@@ -480,16 +500,134 @@ export default function Dashboard({ accessToken, onLogout }: DashboardProps) {
             </div>
           </div>
         ) : (
-          <div className="grid lg:grid-cols-3 gap-4 lg:gap-6">
-            <div className="lg:col-span-1">
-              <RouteList
-                routes={groupedRoutes}
-                selectedRoute={selectedRoute}
-                onSelectRoute={setSelectedRoute}
+          <div className="relative">
+            {/* Mobile Slide-in Menu Overlay */}
+            {showRouteMenu && (
+              <div 
+                className="lg:hidden fixed inset-0 bg-black/50 backdrop-blur-sm z-40"
+                onClick={() => setShowRouteMenu(false)}
               />
-            </div>
+            )}
             
-            <div className="lg:col-span-2 space-y-4 lg:space-y-6">
+            {/* Mobile Slide-in Route Menu */}
+            <div className={`
+              lg:hidden fixed top-0 left-0 h-full w-80 max-w-[85vw] bg-white dark:bg-gray-900 z-50 
+              transform transition-transform duration-300 ease-in-out shadow-2xl
+              ${showRouteMenu ? 'translate-x-0' : '-translate-x-full'}
+            `}>
+              <div className="h-full flex flex-col">
+                {/* Mobile Menu Header */}
+                <div className="flex items-center justify-between p-4 border-b border-gray-200 dark:border-gray-700">
+                  <h2 className="text-lg font-bold text-gray-900 dark:text-white">
+                    Your Routes
+                  </h2>
+                  <button
+                    onClick={() => setShowRouteMenu(false)}
+                    className="p-2 hover:bg-gray-100 dark:hover:bg-gray-800 rounded-lg transition-colors"
+                  >
+                    <svg className="w-5 h-5 text-gray-600 dark:text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                    </svg>
+                  </button>
+                </div>
+                
+                {/* Route List */}
+                <div className="flex-1 overflow-y-auto p-4">
+                  <div className="space-y-2">
+                    {groupedRoutes.map((route, index) => (
+                      <button
+                        key={route.id}
+                        onClick={() => {
+                          setSelectedRoute(route);
+                          setShowRouteMenu(false); // Close menu on selection
+                        }}
+                        className={`w-full text-left p-4 rounded-xl transition-all transform ${
+                          selectedRoute?.id === route.id
+                            ? 'bg-gradient-to-r from-blue-500 to-blue-600 text-white shadow-lg scale-[1.02]'
+                            : 'bg-gray-50 dark:bg-gray-800/50 hover:bg-gray-100 dark:hover:bg-gray-800 hover:shadow-md'
+                        }`}
+                      >
+                        <div className="flex items-start justify-between gap-3">
+                          <div className="flex-1 min-w-0">
+                            <div className="flex items-center gap-2 mb-2">
+                              <span className={`flex items-center justify-center w-7 h-7 rounded-full text-xs font-bold ${
+                                selectedRoute?.id === route.id
+                                  ? 'bg-white/20 text-white'
+                                  : 'bg-blue-100 dark:bg-blue-900/30 text-blue-600 dark:text-blue-400'
+                              }`}>
+                                {index + 1}
+                              </span>
+                              <span className={`font-semibold truncate ${
+                                selectedRoute?.id === route.id
+                                  ? 'text-white'
+                                  : 'text-gray-900 dark:text-gray-100'
+                              }`}>
+                                Route {index + 1}
+                              </span>
+                            </div>
+                            
+                            <div className="grid grid-cols-2 gap-x-4 gap-y-1 text-xs">
+                              <div className={`flex items-center gap-1.5 ${
+                                selectedRoute?.id === route.id
+                                  ? 'text-white/90'
+                                  : 'text-gray-600 dark:text-gray-400'
+                              }`}>
+                                <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2" />
+                                </svg>
+                                {route.activities.length} {route.activities.length === 1 ? 'run' : 'runs'}
+                              </div>
+                              <div className={`flex items-center gap-1.5 ${
+                                selectedRoute?.id === route.id
+                                  ? 'text-white/90'
+                                  : 'text-gray-600 dark:text-gray-400'
+                              }`}>
+                                <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6" />
+                                </svg>
+                                {(route.averageDistance / 1000).toFixed(2)} km
+                              </div>
+                              {route.averageHeartRate && (
+                                <div className={`flex items-center gap-1.5 ${
+                                  selectedRoute?.id === route.id
+                                    ? 'text-white/90'
+                                    : 'text-gray-600 dark:text-gray-400'
+                                }`}>
+                                  <svg className="w-3.5 h-3.5" fill="currentColor" viewBox="0 0 20 20">
+                                    <path fillRule="evenodd" d="M3.172 5.172a4 4 0 015.656 0L10 6.343l1.172-1.171a4 4 0 115.656 5.656L10 17.657l-6.828-6.829a4 4 0 010-5.656z" clipRule="evenodd" />
+                                  </svg>
+                                  {Math.round(route.averageHeartRate)} bpm
+                                </div>
+                              )}
+                            </div>
+                          </div>
+                          
+                          {selectedRoute?.id === route.id && (
+                            <svg className="w-5 h-5 text-white flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
+                              <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
+                            </svg>
+                          )}
+                        </div>
+                      </button>
+                    ))}
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            {/* Desktop and Content Layout */}
+            <div className="grid lg:grid-cols-3 gap-4 lg:gap-6">
+              {/* Desktop Route List - Hidden on Mobile */}
+              <div className="hidden lg:block lg:col-span-1">
+                <RouteList
+                  routes={groupedRoutes}
+                  selectedRoute={selectedRoute}
+                  onSelectRoute={setSelectedRoute}
+                />
+                </div>
+            
+            {/* Main Content Area - Full width on mobile, 2/3 on desktop */}
+            <div className="col-span-full lg:col-span-2 space-y-4 lg:space-y-6">
               {selectedRoute && (
                 <>
                   {/* Route Map Card */}
@@ -501,7 +639,7 @@ export default function Dashboard({ accessToken, onLogout }: DashboardProps) {
                         </svg>
                         Route Map
                       </h2>
-                      <div className="h-64 sm:h-80 lg:h-96 rounded-xl overflow-hidden border-2 border-gray-100 dark:border-gray-700">
+                      <div className="h-56 sm:h-72 lg:h-96 rounded-xl overflow-hidden border-2 border-gray-100 dark:border-gray-700">
                         <RouteMap activities={selectedRoute.activities} />
                       </div>
                       
@@ -565,6 +703,7 @@ export default function Dashboard({ accessToken, onLogout }: DashboardProps) {
                 </>
               )}
             </div>
+          </div>
           </div>
         )}
       </div>
