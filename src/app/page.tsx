@@ -55,14 +55,22 @@ function HomeContent() {
 
   if (isLoading) {
     return (
-      <main className="min-h-screen flex items-center justify-center">
-        <div className="text-xl">Loading...</div>
+      <main className="min-h-screen bg-gradient-to-br from-gray-50 to-blue-50 dark:from-gray-900 dark:to-blue-900/20 flex items-center justify-center">
+        <div className="text-center">
+          <div className="relative w-20 h-20 mx-auto mb-6">
+            <div className="absolute inset-0 border-4 border-blue-200 dark:border-blue-800 rounded-full"></div>
+            <div className="absolute inset-0 border-4 border-blue-500 dark:border-blue-400 rounded-full border-t-transparent animate-spin"></div>
+          </div>
+          <p className="text-lg font-medium text-gray-700 dark:text-gray-300 animate-pulse">
+            Loading your journey...
+          </p>
+        </div>
       </main>
     );
   }
 
   return (
-    <main className="min-h-screen p-4 sm:p-8">
+    <main className="min-h-screen">
       {!accessToken ? (
         <StravaConnect />
       ) : (
@@ -75,8 +83,16 @@ function HomeContent() {
 export default function Home() {
   return (
     <Suspense fallback={
-      <main className="min-h-screen flex items-center justify-center">
-        <div className="text-xl">Loading...</div>
+      <main className="min-h-screen bg-gradient-to-br from-gray-50 to-blue-50 dark:from-gray-900 dark:to-blue-900/20 flex items-center justify-center">
+        <div className="text-center">
+          <div className="relative w-20 h-20 mx-auto mb-6">
+            <div className="absolute inset-0 border-4 border-blue-200 dark:border-blue-800 rounded-full"></div>
+            <div className="absolute inset-0 border-4 border-blue-500 dark:border-blue-400 rounded-full border-t-transparent animate-spin"></div>
+          </div>
+          <p className="text-lg font-medium text-gray-700 dark:text-gray-300 animate-pulse">
+            Loading your journey...
+          </p>
+        </div>
       </main>
     }>
       <HomeContent />

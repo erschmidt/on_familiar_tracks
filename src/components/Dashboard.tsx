@@ -489,41 +489,78 @@ export default function Dashboard({ accessToken, onLogout }: DashboardProps) {
               />
             </div>
             
-            <div className="lg:col-span-2 space-y-6">
+            <div className="lg:col-span-2 space-y-4 lg:space-y-6">
               {selectedRoute && (
                 <>
-                  <div className="bg-white dark:bg-gray-800 rounded-lg shadow-lg p-6">
-                    <h2 className="text-2xl font-bold mb-4">
-                      Route Map
-                    </h2>
-                    <div className="h-96 rounded-lg overflow-hidden">
-                      <RouteMap activities={selectedRoute.activities} />
-                    </div>
-                    <div className="mt-4 grid grid-cols-3 gap-4 text-center">
-                      <div>
-                        <div className="text-2xl font-bold">{selectedRoute.activities.length}</div>
-                        <div className="text-sm text-gray-600 dark:text-gray-400">Activities</div>
+                  {/* Route Map Card */}
+                  <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-lg border border-gray-200 dark:border-gray-700 overflow-hidden">
+                    <div className="p-4 sm:p-6">
+                      <h2 className="text-lg font-bold text-gray-900 dark:text-white mb-4 flex items-center gap-2">
+                        <svg className="w-5 h-5 text-green-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 20l-5.447-2.724A1 1 0 013 16.382V5.618a1 1 0 011.447-.894L9 7m0 13l6-3m-6 3V7m6 10l4.553 2.276A1 1 0 0021 18.382V7.618a1 1 0 00-.553-.894L15 4m0 13V4m0 0L9 7" />
+                        </svg>
+                        Route Map
+                      </h2>
+                      <div className="h-64 sm:h-80 lg:h-96 rounded-xl overflow-hidden border-2 border-gray-100 dark:border-gray-700">
+                        <RouteMap activities={selectedRoute.activities} />
                       </div>
-                      <div>
-                        <div className="text-2xl font-bold">
-                          {(selectedRoute.averageDistance / 1000).toFixed(2)} km
+                      
+                      {/* Stats Grid */}
+                      <div className="mt-6 grid grid-cols-3 gap-3 sm:gap-4">
+                        <div className="bg-gradient-to-br from-blue-50 to-blue-100/50 dark:from-blue-900/20 dark:to-blue-800/10 rounded-xl p-3 sm:p-4 text-center">
+                          <div className="flex items-center justify-center mb-2">
+                            <svg className="w-5 h-5 text-blue-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2" />
+                            </svg>
+                          </div>
+                          <div className="text-xl sm:text-2xl font-bold text-gray-900 dark:text-white">
+                            {selectedRoute.activities.length}
+                          </div>
+                          <div className="text-xs text-gray-600 dark:text-gray-400 mt-1">
+                            {selectedRoute.activities.length === 1 ? 'Activity' : 'Activities'}
+                          </div>
                         </div>
-                        <div className="text-sm text-gray-600 dark:text-gray-400">Avg Distance</div>
-                      </div>
-                      <div>
-                        <div className="text-2xl font-bold">
-                          {selectedRoute.averageHeartRate ? Math.round(selectedRoute.averageHeartRate) : 'N/A'}
+                        <div className="bg-gradient-to-br from-green-50 to-green-100/50 dark:from-green-900/20 dark:to-green-800/10 rounded-xl p-3 sm:p-4 text-center">
+                          <div className="flex items-center justify-center mb-2">
+                            <svg className="w-5 h-5 text-green-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6" />
+                            </svg>
+                          </div>
+                          <div className="text-xl sm:text-2xl font-bold text-gray-900 dark:text-white">
+                            {(selectedRoute.averageDistance / 1000).toFixed(2)}
+                          </div>
+                          <div className="text-xs text-gray-600 dark:text-gray-400 mt-1">
+                            km avg
+                          </div>
                         </div>
-                        <div className="text-sm text-gray-600 dark:text-gray-400">Avg Heart Rate</div>
+                        <div className="bg-gradient-to-br from-red-50 to-red-100/50 dark:from-red-900/20 dark:to-red-800/10 rounded-xl p-3 sm:p-4 text-center">
+                          <div className="flex items-center justify-center mb-2">
+                            <svg className="w-5 h-5 text-red-500" fill="currentColor" viewBox="0 0 20 20">
+                              <path fillRule="evenodd" d="M3.172 5.172a4 4 0 015.656 0L10 6.343l1.172-1.171a4 4 0 115.656 5.656L10 17.657l-6.828-6.829a4 4 0 010-5.656z" clipRule="evenodd" />
+                            </svg>
+                          </div>
+                          <div className="text-xl sm:text-2xl font-bold text-gray-900 dark:text-white">
+                            {selectedRoute.averageHeartRate ? Math.round(selectedRoute.averageHeartRate) : 'N/A'}
+                          </div>
+                          <div className="text-xs text-gray-600 dark:text-gray-400 mt-1">
+                            bpm avg
+                          </div>
+                        </div>
                       </div>
                     </div>
                   </div>
 
-                  <div className="bg-white dark:bg-gray-800 rounded-lg shadow-lg p-6">
-                    <h2 className="text-2xl font-bold mb-4">
-                      Progress Over Time
-                    </h2>
-                    <ProgressChart activities={selectedRoute.activities} />
+                  {/* Progress Chart Card */}
+                  <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-lg border border-gray-200 dark:border-gray-700 overflow-hidden">
+                    <div className="p-4 sm:p-6">
+                      <h2 className="text-lg font-bold text-gray-900 dark:text-white mb-4 flex items-center gap-2">
+                        <svg className="w-5 h-5 text-purple-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
+                        </svg>
+                        Progress Over Time
+                      </h2>
+                      <ProgressChart activities={selectedRoute.activities} />
+                    </div>
                   </div>
                 </>
               )}
